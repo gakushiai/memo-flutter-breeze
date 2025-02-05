@@ -1,25 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NoteList } from "@/components/NoteList";
 import { NoteEditor } from "@/components/NoteEditor";
 import { Note } from "@/types/note";
 import { NotepadText } from "lucide-react";
+import { getNotes } from "@/services/noteService";
 
-const Index = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
+export default function Index() {
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const noteListRef = useRef<{ loadNotes: () => Promise<void> } | null>(null);
 
-  const addNote = (note: Note) => {
-    setNotes([note, ...notes]);
+  const handleNoteSelect = (note: Note) => {
+    setSelectedNote(note);
   };
 
-  const updateNote = (updatedNote: Note) => {
-    setNotes(notes.map((note) => (note.id === updatedNote.id ? updatedNote : note)));
+  const handleNoteDeleted = () => {
     setSelectedNote(null);
   };
 
-  const deleteNote = (id: string) => {
-    setNotes(notes.filter((note) => note.id !== id));
+  const handleNoteUpdated = async () => {
     setSelectedNote(null);
+    if (noteListRef.current) {
+      await noteListRef.current.loadNotes();
+    }
   };
 
   return (
@@ -36,23 +38,24 @@ const Index = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-1">
             <NoteList
-              notes={notes}
-              onNoteSelect={setSelectedNote}
-              onNoteDelete={deleteNote}
+              ref={noteListRef}
+              onNoteSelect={handleNoteSelect}
               selectedNote={selectedNote}
+              onNoteDeleted={handleNoteDeleted}
             />
           </div>
           <div className="md:col-span-2">
             <NoteEditor
-              onSave={selectedNote ? updateNote : addNote}
+              onSave={(note) => {
+                setSelectedNote(null);
+              }}
               initialNote={selectedNote}
               key={selectedNote?.id}
+              onNoteUpdated={handleNoteUpdated}
             />
           </div>
         </div>
       </main>
     </div>
   );
-};
-
-export default Index;
+}

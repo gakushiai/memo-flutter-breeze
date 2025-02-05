@@ -3,15 +3,18 @@ import { Note } from "@/types/note";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { createNote, updateNote } from "@/services/noteService";
 
 interface NoteEditorProps {
   onSave: (note: Note) => void;
   initialNote: Note | null;
+  onNoteUpdated?: () => void;
 }
 
-export const NoteEditor = ({ onSave, initialNote }: NoteEditorProps) => {
+export const NoteEditor = ({ onSave, initialNote, onNoteUpdated }: NoteEditorProps) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (initialNote) {
@@ -23,18 +26,35 @@ export const NoteEditor = ({ onSave, initialNote }: NoteEditorProps) => {
     }
   }, [initialNote]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const note: Note = {
-      id: initialNote?.id || crypto.randomUUID(),
-      title,
-      content,
-      createdAt: initialNote?.createdAt || new Date(),
-    };
-    onSave(note);
-    if (!initialNote) {
-      setTitle("");
-      setContent("");
+    setSaving(true);
+
+    try {
+      let savedNote: Note;
+      if (initialNote) {
+        savedNote = await updateNote({
+          ...initialNote,
+          title,
+          content,
+        });
+      } else {
+        savedNote = await createNote({
+          title,
+          content,
+          createdAt: new Date(),
+        });
+        setTitle("");
+        setContent("");
+      }
+      onSave(savedNote);
+      if (onNoteUpdated) {
+        onNoteUpdated();
+      }
+    } catch (error) {
+      console.error('メモの保存に失敗しました:', error);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -58,8 +78,8 @@ export const NoteEditor = ({ onSave, initialNote }: NoteEditorProps) => {
         />
       </div>
       <div className="flex justify-end">
-        <Button type="submit">
-          {initialNote ? "更新" : "保存"}
+        <Button type="submit" disabled={saving}>
+          {saving ? "保存中..." : initialNote ? "更新" : "保存"}
         </Button>
       </div>
     </form>
