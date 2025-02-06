@@ -1,4 +1,4 @@
-# メモアプリケーション - Flutter Breeze
+# メモアプリケーション - Breeze Note
 
 このリポジトリは、Udemyの講座で使用するメモアプリケーションのソースコードです。React、TypeScript、Firebase を使用したモダンなWebアプリケーションの開発方法を学ぶことができます。
 
