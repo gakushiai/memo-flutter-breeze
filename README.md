@@ -1,69 +1,149 @@
-# Welcome to your Lovable project
+# メモアプリケーション - Flutter Breeze
 
-## Project info
+このリポジトリは、Udemyの講座で使用するメモアプリケーションのソースコードです。React、TypeScript、Firebase を使用したモダンなWebアプリケーションの開発方法を学ぶことができます。
 
-**URL**: https://lovable.dev/projects/07c26d9b-3c3d-475b-b42c-6538c570c607
+## 必要な環境
 
-## How can I edit this code?
+以下のソフトウェアをインストールする必要があります：
 
-There are several ways of editing your application.
+1. **Node.js (バージョン 18.0.0 以上)**
+   - インストール方法：
+     - Windows: [Node.js公式サイト](https://nodejs.org/)からインストーラーをダウンロードしてインストール
+     - Mac: Homebrewを使用してインストール: `brew install node`
+     - [Node Version Manager (nvm)](https://github.com/nvm-sh/nvm)を使用してインストールすることも推奨します
 
-**Use Lovable**
+2. **Git**
+   - インストール方法：
+     - Windows: [Git for Windows](https://gitforwindows.org/)からインストーラーをダウンロード
+     - Mac: `brew install git`
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/07c26d9b-3c3d-475b-b42c-6538c570c607) and start prompting.
+3. **コードエディタ**
+   - 推奨: [Visual Studio Code](https://code.visualstudio.com/)
+   - 必要な拡張機能:
+     - ESLint
+     - Prettier
+     - TypeScript and JavaScript Language Features
 
-Changes made via Lovable will be committed automatically to this repo.
+## プロジェクトのセットアップ
 
-**Use your preferred IDE**
+1. **リポジトリのクローン**
+   ```bash
+   git clone https://github.com/gakushiai/memo-flutter-breeze
+   cd memo-flutter-breeze
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2. **依存関係のインストール**
+   ```bash
+   npm install
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+3. **環境変数の設定**
+   - `.env.example` ファイルを `.env` にコピーして、必要な環境変数を設定
+   ```bash
+   cp .env.example .env
+   ```
+   - Firebaseの設定値を `.env` ファイルに記入
+   ```
+   VITE_FIREBASE_API_KEY=your-api-key
+   VITE_FIREBASE_AUTH_DOMAIN=your-auth-domain
+   VITE_FIREBASE_PROJECT_ID=your-project-id
+   VITE_FIREBASE_STORAGE_BUCKET=your-storage-bucket
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+   VITE_FIREBASE_APP_ID=your-app-id
+   ```
 
-Follow these steps:
+4. **開発サーバーの起動**
+   ```bash
+   npm run dev
+   ```
+   - ブラウザで `http://localhost:XXXX` を開くと、アプリケーションが表示されます
+   XXXXはポート番号です。ターミナル上で指定されます。
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 主な機能
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- ユーザー認証（サインアップ/ログイン）
+- メモの作成、編集、削除
+- リアルタイムデータ同期
+- レスポンシブデザイン
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 使用している主な技術
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+- **フロントエンド**
+  - React 18
+  - TypeScript
+  - Tailwind CSS
+  - shadcn/ui
 
-**Edit a file directly in GitHub**
+- **バックエンド/インフラ**
+  - Firebase Authentication
+  - Cloud Firestore
+  - Vite (開発環境)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## デプロイ方法（Netlify）
 
-**Use GitHub Codespaces**
+1. **Netlifyアカウントの作成**
+   - [Netlify](https://www.netlify.com/)にアクセスし、アカウントを作成
+   - GitHubアカウントでサインアップすることを推奨
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+2. **プロジェクトのデプロイ**
+   - Netlifyダッシュボードから「Add new site」→「Import an existing project」を選択
+   - GitHubリポジトリと連携
+   - 以下のビルド設定を行う：
+     - Build command: `npm run build`
+     - Publish directory: `dist`
+     - Node version: `18`
 
-## What technologies are used for this project?
+3. **環境変数の設定**
+   - Netlifyダッシュボードで「Site settings」→「Environment variables」を選択
+   - 以下の環境変数を追加（`.env`ファイルと同じ値）：
+     ```
+     VITE_FIREBASE_API_KEY
+     VITE_FIREBASE_AUTH_DOMAIN
+     VITE_FIREBASE_PROJECT_ID
+     VITE_FIREBASE_STORAGE_BUCKET
+     VITE_FIREBASE_MESSAGING_SENDER_ID
+     VITE_FIREBASE_APP_ID
+     ```
 
-This project is built with .
+4. **デプロイの確認**
+   - 自動的にデプロイが開始されます
+   - デプロイが完了すると、`https://your-site-name.netlify.app`のURLでアクセス可能
+   - GitHubリポジトリにプッシュするたびに自動的にデプロイされます
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## トラブルシューティング
 
-## How can I deploy this project?
+1. **`npm install` でエラーが発生する場合**
+   - Node.jsのバージョンが18.0.0以上であることを確認
+   ```bash
+   node -v
+   ```
+   - パッケージマネージャーのキャッシュをクリア
+   ```bash
+   npm cache clean --force
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/07c26d9b-3c3d-475b-b42c-6538c570c607) and click on Share -> Publish.
+2. **開発サーバーが起動しない場合**
+   - ポートXXXXが他のプロセスで使用されていないか確認
+   - すべての依存関係が正しくインストールされているか確認
 
-## I want to use a custom domain - is that possible?
+3. **Firebaseの接続エラー**
+   - `.env` ファイルの設定値が正しいか確認
+   - Firebaseコンソールで該当するプロジェクトの設定を確認
+   - Netlifyの環境変数が正しく設定されているか確認
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+4. **Netlifyデプロイのエラー**
+   - ビルドログを確認（「Deploys」タブから確認可能）
+   - Node.jsバージョンが18以上に設定されているか確認
+   - 環境変数が正しく設定されているか確認
+   - デプロイ設定（ビルドコマンドやパブリッシュディレクトリ）が正しいか確認
+
+## サポート
+
+質問や問題がある場合は、以下の方法でサポートを受けることができます：
+
+1. Udemyのコースページでの質問
+2. このリポジトリのIssuesセクション
+
+## ライセンス
+
+このプロジェクトはMITライセンスの下で公開されています。
